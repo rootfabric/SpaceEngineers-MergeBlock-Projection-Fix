@@ -1,5 +1,10 @@
 # Space Engineers Merge Block Projection Fix
 
+[![Build](https://github.com/rootfabric/SpaceEngineers-MergeBlock-Projection-Fix/actions/workflows/build.yml/badge.svg)](https://github.com/rootfabric/SpaceEngineers-MergeBlock-Projection-Fix/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/rootfabric/SpaceEngineers-MergeBlock-Projection-Fix)](https://github.com/rootfabric/SpaceEngineers-MergeBlock-Projection-Fix/releases/latest)
+
+**Download:** [MergeBlockProjectionFix-R4.zip](https://github.com/rootfabric/SpaceEngineers-MergeBlock-Projection-Fix/releases/download/v4.0.0/MergeBlockProjectionFix-R4.zip)
+
 Server-side compatibility plugin for **Space Engineers Dedicated Server** that fixes projected **Merge Blocks detaching while being welded in Survival**.
 
 - **No Torch required**
