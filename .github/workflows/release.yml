@@ -1,0 +1,69 @@
+name: Publish R4 Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/release.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-2022
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build R4
+        shell: pwsh
+        run: dotnet build MergeBlockProjectionFix.csproj -c Release
+
+      - name: Package release
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $bin = Join-Path $env:GITHUB_WORKSPACE 'bin\Release\net48'
+          $out = Join-Path $env:GITHUB_WORKSPACE 'release-package'
+          New-Item -ItemType Directory -Path $out -Force | Out-Null
+
+          Copy-Item (Join-Path $bin 'MergeBlockProjectionFix.dll') $out
+          Copy-Item (Join-Path $bin '0Harmony.dll') $out
+          Copy-Item 'README.md' $out
+
+          $pluginHash = (Get-FileHash (Join-Path $out 'MergeBlockProjectionFix.dll') -Algorithm SHA256).Hash
+          $harmonyHash = (Get-FileHash (Join-Path $out '0Harmony.dll') -Algorithm SHA256).Hash
+
+          @(
+            "MergeBlockProjectionFix.dll  $pluginHash",
+            "0Harmony.dll                 $harmonyHash"
+          ) | Set-Content (Join-Path $out 'SHA256.txt')
+
+          Compress-Archive -Path (Join-Path $out '*') -DestinationPath (Join-Path $env:GITHUB_WORKSPACE 'MergeBlockProjectionFix-R4.zip') -Force
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v4.0.0
+          name: Merge Block Projection Fix R4
+          body: |
+            Server-side fix for the projected Merge Block detachment regression in Space Engineers Dedicated Server 1.210.014.
+
+            - No Torch required
+            - Server-side only
+            - Confirmed working in Survival
+            - Includes MergeBlockProjectionFix.dll and 0Harmony.dll
+
+            Related Keen bug:
+            https://support.keenswh.com/spaceengineers/pc/topic/55863-merge-blocks-from-projector-broken-with-prosperity-update
+
+            Related Keen hotfix:
+            https://www.spaceengineersgame.com/space-engineers-hotfix-1-210-013/
+          files: |
+            MergeBlockProjectionFix-R4.zip
+            release-package/MergeBlockProjectionFix.dll
+            release-package/SHA256.txt
+          fail_on_unmatched_files: true
