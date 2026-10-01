@@ -55,7 +55,7 @@ R4 accepts the actual runtime shape observed on vanilla Dedicated Server `1.210.
 
 ## Installation
 
-Download the release archive and keep these files together:
+Download the latest archive from **GitHub Releases** and keep these files together:
 
 ```text
 MergeBlockProjectionFix.dll
@@ -72,7 +72,7 @@ SpaceEngineersDedicated.exe -plugin "C:\SEPlugins\MergeBlockProjectionFix\MergeB
 
 Clients do **not** need the plugin.
 
-A ready-to-use build is also committed under `release/`.
+The release ZIP is built and published by GitHub Actions from the repository source.
 
 ## Verify that the patch is active
 
